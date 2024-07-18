@@ -1,12 +1,21 @@
+from datetime import datetime, timedelta
+
 import requests
 
 from constant import WEATHER_URL, DAYS, WEATHER_CODE
 from models import WeatherDetail, WeatherResponse
-from datetime import datetime, timedelta
 
 
 def get_weather(city: str):
-    geocode_url = f"https://geocoding-api.open-meteo.com/v1/search?name={city}&count=1&language=ru&format=json"
+    """
+    Получение координат через API
+    (Тут мы получаем координаты, через ввод города).
+    Далее данные координаты прокидываются в другое API
+    с получением прогноза погоды через координаты.
+    Потом мы получаем ответ json, забираем и прогоняем через их через цикл.
+    """
+    geocode_url = (f"https://geocoding-api.open-meteo.com/v1/search?"
+                   f"name={city}&count=1&language=ru&format=json")
     geocode_response = requests.get(geocode_url).json()
     cord = geocode_response["results"][0]
     lat = cord['latitude']
@@ -36,6 +45,3 @@ def get_weather(city: str):
         forecast.append(weather_item)
 
     return WeatherResponse(city=city, forecast=forecast)
-
-
-print(get_weather('Ижевск'))

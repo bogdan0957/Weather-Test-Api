@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script>
+    const searchForOperation = () => {
+        const searchInputValue = document.getElementById("weather").value;
+        window.location.href = `/pages/weather/${searchInputValue}`;
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="flex justify-center flex-col items-center">
+    <div class="flex my-3 gap-5">
+        <input id="weather" type="text" placeholder="Введите город" class="text-xl">
+        <button onclick="searchForOperation()" class="border-2 rounded-3xl bg-gray-300 p-3">Получить</button>
+    </div>
+    <span>Например, москва, санкт-петербург и т.д. </span>
+
+    <div class="flex rounded-3 border-2 p-3 mt-5 w-full">
+        <div class="flex flex-col w-full">
+            <span class="text-2xl font-bold">{{ weather_city.city }}</span>
+            <div class="flex flex-row justify-between w-full">
+                {% set labels = ['Сегодня', 'Завтра', 'Послезавтра'] %}
+                {% for forecast in weather_city.forecast %}
+                    <div class="flex flex-col items-center">
+                        {% if loop.index <= labels|length %}
+                            <span class="text-xl font-bold">{{ labels[loop.index0] }}</span>
+                        {% else %}
+                            <span class="text-xl font-bold">{{ forecast[0] }}</span>
+                        {% endif %}
+                        <span class="text-xl">Дата: {{ forecast.date }}</span>
+                        <span class="text-xl">Температура: {{ forecast.temperature }}</span>
+                        <span class="text-xl">Описание погоды: {{ forecast.weather_description }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
